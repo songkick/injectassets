@@ -1,0 +1,34 @@
+{
+  "name": "injectassets",
+  "version": "0.0.0",
+  "description": "CLI tool to inject assets paths into your HTML file",
+  "main": "index.js",
+  "bin": {
+    "injectassets": "./bin.js"
+  },
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArnaudRinquin/injectassets.git"
+  },
+  "keywords": [
+    "assets",
+    "inject",
+    "html",
+    "template"
+  ],
+  "author": "Arnaud Rinquin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ArnaudRinquin/injectassets/issues"
+  },
+  "homepage": "https://github.com/ArnaudRinquin/injectassets#readme",
+  "devDependencies": {
+    "chokidar": "^1.2.0",
+    "commander": "^2.9.0",
+    "glob": "^6.0.1",
+    "mustache": "^2.2.0"
+  }
+}
