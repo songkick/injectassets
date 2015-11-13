@@ -41,8 +41,6 @@ if (options.watch) {
     '*.@(' + options.extensions.join('|') + ')'
   );
 
-  console.log('Watching:', assetsGlob);
-
   chokidar.watch(assetsGlob, {
     ignoreInitial: true
   }).on('all', run);
