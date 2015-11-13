@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var commander = require('commander');
 var chokidar = require('chokidar');
 var insertassets = require('./index');
