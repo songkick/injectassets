@@ -1,14 +1,12 @@
 {
   "name": "injectassets",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "CLI tool to inject assets paths into your HTML file",
   "main": "index.js",
   "bin": {
     "injectassets": "bin.js"
   },
-  "scripts": {
-
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ArnaudRinquin/injectassets.git"
