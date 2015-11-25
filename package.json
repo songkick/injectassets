@@ -27,6 +27,7 @@
     "chokidar": "^1.2.0",
     "commander": "^2.9.0",
     "glob": "^6.0.1",
-    "mustache": "^2.2.0"
+    "mustache": "^2.2.0",
+    "node.extend": "^1.1.5"
   }
 }

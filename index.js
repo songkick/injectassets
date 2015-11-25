@@ -2,77 +2,83 @@ var mustache = require('mustache');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
+var extend = require('node.extend');
 
-function readTemplate(options) {
+function readStream(stream) {
   return new Promise(function(resolve, reject){
-    try {
-
-      var sourceChunks = [];
-      var sourceStream;
-
-      if (options.source) {
-        sourceStream = fs.createReadStream(options.source, {
-          autoclose: true,
-          encoding: options.encoding
-        });
-      } else {
-        process.stdin.setEncoding(options.encoding);
-        sourceStream = process.stdin;
+    var content = '';
+    stream.on('readable', function() {
+      var chunk = stream.read();
+      if (chunk) {
+        content += chunk;
       }
+    });
 
-      sourceStream.on('readable', function() {
-        var chunk = sourceStream.read();
-        if (chunk) {
-          sourceChunks.push(chunk);
-        }
-      });
+    stream.on('end', function() {
+      resolve(content);
+    });
 
-      sourceStream.on('end', function() {
-        var template = sourceChunks.join();
-        resolve(template);
-      });
-    } catch (error) {
-      reject(error);
-    }
+    stream.on('error', reject);
   });
 }
 
+function readTemplate(options) {
+  var stream;
+
+  if (options.source) {
+    stream = fs.createReadStream(options.source, {
+      autoclose: true,
+      encoding: options.encoding
+    });
+  } else {
+    process.stdin.setEncoding(options.encoding);
+    stream = process.stdin;
+  }
+
+  return readStream(stream);
+}
+
 function pushInExtensionArray(container, fileDescription) {
-  var extension = extensionFromDescription(fileDescription);
+  var extension = fileDescription.ext.slice(1);
   container[extension] = container[extension] || [];
   container[extension].push(fileDescription);
   return container;
 }
 
-function extensionFromDescription(fileDescription) {
-  return fileDescription.ext.slice(1);
-}
-
-function listFiles(options) {
-
-  function extensionIsInjected(fileDescription) {
-    var extension = extensionFromDescription(fileDescription);
-    return options.extensions.indexOf(extension) > -1;
-  }
-
+function listSingleGlob(globString) {
   return new Promise(function(resolve, reject) {
-    var assetsGlob = path.join(
-      options.dir,
-      '*.@(' + options.extensions.join('|') + ')'
-    );
-
-    glob(assetsGlob, function (err, paths) {
+    glob(globString, function (err, paths) {
       if (err) {
         reject(err);
       } else {
         resolve(paths);
       }
     });
-  }).then(function(paths) {
-    return paths.map(path.parse)
-      .filter(extensionIsInjected)
-      .reduce(pushInExtensionArray, {})
   });
+}
+
+
+function prefixPathWith(dir) {
+  return function(glob) {
+    return path.join(dir, glob);
+  }
+}
+
+function listFiles(globs, fromDir) {
+  return Promise.all(globs
+      .map(prefixPathWith(fromDir))
+      .map(listSingleGlob))
+    .then(function(results){
+      return results.reduce(function(allPaths, paths){
+        return allPaths.concat(paths);
+      });
+    })
+}
+
+function sortByExtensions(paths) {
+  return paths
+    .map(path.parse)
+    .reduce(pushInExtensionArray, {});
 }
 
 function createOutputStream(options) {
@@ -114,15 +120,72 @@ function formatPaths(options) {
   };
 }
 
+function getFileContent(options, path) {
+  var stream = fs.createReadStream(path, {
+    autoclose: true,
+    encoding: options.encoding
+  });
+
+  return readStream(stream).then(function(content){
+    return {
+      content: content,
+      path: path,
+    };
+  });
+}
+
+function getInlinedFilesContents(options) {
+  if (!options.inlineGlobs) {
+    return {};
+  }
+
+  return listFiles(options.inlineGlobs, options.dir)
+    .then(function(paths){
+      return Promise.all(paths.map(getFileContent.bind(null, options)))
+    })
+    .then(function(pathsAndContents){
+      return pathsAndContents.reduce(function(contentsByExtension, pathAndContent){
+        var filePath = pathAndContent.path;
+        var content = pathAndContent.content;
+        var extension = path.extname(filePath).slice(1);
+        var key = 'inline_' + extension;
+
+        contentsByExtension[key] = contentsByExtension[key] || [];
+        contentsByExtension[key].push(content);
+
+        return contentsByExtension;
+      }, {});
+    });
+}
+
+function fromDirectory(directory) {
+    return function(paths){
+      return paths.map(path.relative.bind(path, directory));
+    };
+}
+
+function getReferencesPaths(options) {
+  if (!options.referenceGlobs) {
+    return {};
+  }
+  return listFiles(options.referenceGlobs, options.dir)
+    .then(fromDirectory(options.dir))
+    .then(sortByExtensions)
+    .then(formatPaths(options))
+}
+
 function render(options) {
   return Promise.all([
+    // Read the template
     readTemplate(options),
-    listFiles(options)
-      .then(formatPaths(options)),
+    getReferencesPaths(options),
+    getInlinedFilesContents(options),
   ]).then(function(results) {
     var template = results[0];
     var pathsByExtension = results[1];
-    return mustache.render(template, pathsByExtension);
+    var contentsByExtension = results[2];
+    var locales = extend({}, pathsByExtension, contentsByExtension);
+    return mustache.render(template, locales);
   });
 }
 
@@ -143,7 +206,8 @@ module.exports = function inseertassets(options) {
     var writeStream = results[1];
     return writeToStream(writeStream, rendered);
   }).catch(function(err) {
-    console.error(err);
+    console.error(err.stack);
+    process.exit(1);
   });
 
 }

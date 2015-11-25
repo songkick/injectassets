@@ -12,20 +12,26 @@ var DEFAULTS = {
     output: null,
     dir: './',
     watch: false,
-    pattern: '%base%',
-    extensions: ['js', 'css'],
+    pattern: '{base}',
     encoding: 'utf-8',
+    referenceGlobs: null,
+    inlineGlobs: null,
 };
+
+function splitGlobs(globString) {
+  return globString.split(';');
+}
 
 commander
   .version(pkg.version)
-  .option('-s, --source <path to template>', 'template file path')
-  .option('-o, --output <path>', 'result output path')
-  .option('-e, --extensions <comma separated>', 'comma separated list of extensions to inject')
-  .option('-d, --dir <assets folder>', 'injected assets directory')
-  .option('-p, --pattern <string>', 'use this pattern to generate paths')
+  .option('-s, --source <path to template>', 'template file path, default: stdin')
+  .option('-o, --output <path>', 'result output path, default: stdout')
+  .option('-g, --reference-globs <globs...>', 'globs for files to be inject as references', splitGlobs)
+  .option('-G, --inline-globs <globs...>', 'globs for files to be inlined', splitGlobs)
+  .option('-d, --dir <assets folder>', 'injected assets directory, default: "./"')
+  .option('-p, --pattern <string>', 'use this pattern to generate paths, default {base}')
   .option('-w, --watch', 'run on every source file change')
-  .option('-E, --encoding <string>', 'read/write encoding')
+  .option('-e, --encoding <string>', 'read/write encoding, encoding "utf-8"')
 
 commander.parse(process.argv);
 
@@ -34,19 +40,20 @@ var options = Object.keys(DEFAULTS).reduce(function(options, key){
   return options;
 }, {});
 
-if (!Array.isArray(options.extensions)) {
-  options.extensions = options.extensions.split(',');
-}
-
 var run = insertassets.bind(null, options);
 
 if (options.watch) {
-  var assetsGlob = path.join(
-    options.dir,
-    '*.@(' + options.extensions.join('|') + ')'
-  );
 
-  chokidar.watch(assetsGlob, {
+  function prefixGlobWithDir(glob){
+    return path.join(options.dir, glob);
+  };
+
+  var watchedGlobs = []
+    .concat(options.referenceGlobs)
+    .concat(options.inlineGlobs)
+    .map(prefixGlobWithDir);
+
+  chokidar.watch(watchedGlobs, {
     ignoreInitial: true
   }).on('all', run);
 }

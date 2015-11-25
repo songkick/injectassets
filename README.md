@@ -1,6 +1,6 @@
 # injectassets
 
-CLI tool to inject assets (CSS, JS, ...) file paths into your HTML file (or other).
+CLI tool to inject assets (CSS, JS, ...) file into your HTML file (or other) by either referencing or inlining them.
 
 ## Usage
 
@@ -10,6 +10,11 @@ CLI tool to inject assets (CSS, JS, ...) file paths into your HTML file (or othe
   <html>
   <head>
       <title>injectassets - example</title>
+
+      {{#inline_css}}
+      <style>{{{.}}}</style>
+      {{/inline_css}}
+
       {{#css}}
       <link href="{{{.}}}" rel="stylesheet" type="text/css">
       {{/css}}
@@ -19,6 +24,10 @@ CLI tool to inject assets (CSS, JS, ...) file paths into your HTML file (or othe
       {{#js}}
       <script src="{{{.}}}"></script>
       {{/js}}
+
+      {{#inline_js}}
+      <script>{{{.}}}</script>
+      {{/inline_js}}
   </body>
   </html>
 
@@ -26,15 +35,77 @@ CLI tool to inject assets (CSS, JS, ...) file paths into your HTML file (or othe
 
 1. Run the command:
 
-  ```sh
-  cat src/index.html | injectassets > dist/index.html
+  ```bash
+  Usage: injectassets [options]
+
+    Options:
+
+      -h, --help                        output usage information
+      -V, --version                     output the version number
+      -s, --source <path to template>   template file path, default: stdin
+      -o, --output <path>               result output path, default: stdout
+      -g, --reference-globs <globs...>  globs for files to be inject as references
+      -G, --inline-globs <globs...>     globs for files to be inlined
+      -d, --dir <assets folder>         injected assets directory, default: "./"
+      -p, --pattern <string>            use this pattern to generate paths, default {base}
+      -w, --watch                       run on every source file change
+      -e, --encoding <string>           read/write encoding, default "utf-8"
   ```
 
-## Options
-**-s, --source**: template file path. Default: `stdin`  
-**-o, --output**: result output path. Default: `stdout`  
-**-d, --dir**: injected assets directory. Default: `./`  
-**-e, --extensions**: comma separated list of extensions to inject. Default: `js,css`  
-**-p, --pattern**: use this pattern to generate paths. Default: `{base}` (i.e. just the file name). Example: `/static/{name}.whatever{ext}`. Available keys are attribute returned by [`path.parse()`](https://nodejs.org/api/path.html#path_path_parse_pathstring).  
-**-w, --watch**: run on every source file change.  
-**-E, --encoding:** read/write encoding, Default: `utf-8`  
+## Examples
+
+  * Use stdin and stdout, insert files path with the `-g, --reference-globs` option.
+
+    ```bash
+    cat src/index.html | injectassets -g '*.{css,js}'
+    ```
+
+  * Use a source file and specify output
+
+    ```bash
+    injectassets -g '*.{css,js}' -s src/index.html
+    ```
+
+  * Output to a file
+
+    ```bash
+    cat src/index.html | injectassets -g '*.{css,js}' -o dist/index.html
+    # or simply
+    cat src/index.html | injectassets -g '*.{css,js}' > dist/index.html
+    ```
+
+  * Specify directory containing the assets with `-d, --dir`
+
+    ```bash
+    cat src/index.html | injectassets -d 'dist/' -g '*.{css,js}'
+    ```
+
+  * Decide how files path will be formatted. Keys are all the values returned by [`path.parse()`](https://nodejs.org/api/path.html#path_path_parse_pathstring) (i.e: `root`, `dir`, `base`, `name`, `ext`)
+
+    ```bash
+    cat src/index.html | injectassets -g '*.{css,js}' -p '/public/{name}{ext}'
+    ```
+
+  * Inline files content with the `-G, --inline-globs` option
+
+    ```bash
+    cat src/index.html | injectassets -G '*.{css,js}'
+    ```
+
+  * Inline some files, inject references some others
+
+    ```bash
+    cat src/index.html | injectassets -G 'critical*.{css,js}' -g '!(critical)*.{css,js}'
+    ```
+
+  * Specify multiple globs separating them with `;`
+
+    ```bash
+    cat src/index.html | injectassets -G 'scripts/*.js;styles/*.css'
+    ```
+
+  * Watch for any change on specified globs and rerun automatically with `-w, --watch`
+
+    ```bash
+    cat src/index.html | injectassets -G 'scripts/*.js;styles/*.css' -w -o dist/index.html
+    ```
