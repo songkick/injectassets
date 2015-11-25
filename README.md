@@ -2,7 +2,16 @@
 
 [![Build Status](https://travis-ci.org/ArnaudRinquin/injectassets.svg)](https://travis-ci.org/ArnaudRinquin/injectassets)
 
-CLI tool to inject assets (CSS, JS, ...) file into your HTML file (or other) by either referencing or inlining them.
+Utility to inject reference or inline assets in your HTML
+
+**Use cases**
+
+* Automatically inject a long list of assets in your index.html
+* Automatically inject files which names are updated often, like when using [`hashmark`](https://github.com/keithamus/hashmark)
+* Just list all your assets
+* Generate an [appcache manifest](http://www.html5rocks.com/en/tutorials/appcache/beginner/)
+* Concat files
+* _???_
 
 ## Usage
 
