@@ -15,51 +15,51 @@ Utility to inject reference or inline assets in your HTML
 
 1. Write a basic (HTML) [mustache](http://mustache.github.io/) template using extensions as iterators:
 
-  ```html
-  <html>
-  <head>
-      <title>injectassets - example</title>
+    ```html
+    <html>
+    <head>
+        <title>injectassets - example</title>
 
-      {{#inline_css}}
-      <style>{{{.}}}</style>
-      {{/inline_css}}
+        {{#inline_css}}
+        <style>{{{.}}}</style>
+        {{/inline_css}}
 
-      {{#css}}
-      <link href="{{{.}}}" rel="stylesheet" type="text/css">
-      {{/css}}
-  </head>
-  <body>
-      <h1>It works!</h1>
-      {{#js}}
-      <script src="{{{.}}}"></script>
-      {{/js}}
+        {{#css}}
+        <link href="{{{.}}}" rel="stylesheet" type="text/css">
+        {{/css}}
+    </head>
+    <body>
+        <h1>It works!</h1>
+        {{#js}}
+        <script src="{{{.}}}"></script>
+        {{/js}}
 
-      {{#inline_js}}
-      <script>{{{.}}}</script>
-      {{/inline_js}}
-  </body>
-  </html>
+        {{#inline_js}}
+        <script>{{{.}}}</script>
+        {{/inline_js}}
+    </body>
+    </html>
 
-  ```
+    ```
 
 1. Run the command:
 
-  ```bash
-  Usage: injectassets [options]
+    ```bash
+    Usage: injectassets [options]
 
-  Options:
+    Options:
 
-  -h, --help                        output usage information
-  -V, --version                     output the version number
-  -s, --source <path to template>   template file path, default: stdin
-  -o, --output <path>               result output path, default: stdout
-  -g, --reference-globs <globs...>  globs for files to be inject as references
-  -G, --inline-globs <globs...>     globs for files to be inlined
-  -d, --dir <assets folder>         injected assets directory, default: "./"
-  -p, --pattern <string>            use this pattern to generate paths, default {dir}/{base}
-  -w, --watch                       run on every source file change
-  -e, --encoding <string>           read/write encoding, encoding "utf-8"
-  ```
+    -h, --help                        output usage information
+    -V, --version                     output the version number
+    -s, --source <path to template>   template file path, default: stdin
+    -o, --output <path>               result output path, default: stdout
+    -g, --reference-globs <globs...>  globs for files to be inject as references
+    -G, --inline-globs <globs...>     globs for files to be inlined
+    -d, --dir <assets folder>         injected assets directory, default: "./"
+    -p, --pattern <string>            use this pattern to generate paths, default {dir}/{base}
+    -w, --watch                       run on every source file change
+    -e, --encoding <string>           read/write encoding, encoding "utf-8"
+    ```
 
 ## Examples
 
@@ -67,9 +67,10 @@ Utility to inject reference or inline assets in your HTML
 
     ```bash
     cat src/index.html | injectassets -g '*.{css,js}'
+    # print HTML to stdout
     ```
 
-  * Use a source file and specify output
+  * Use a source file
 
     ```bash
     injectassets -g '*.{css,js}' -s src/index.html
