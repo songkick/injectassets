@@ -1,6 +1,6 @@
 {
   "name": "injectassets",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "CLI tool to inject assets paths into your HTML file",
   "main": "index.js",
   "bin": {
