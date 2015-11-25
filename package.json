@@ -1,6 +1,6 @@
 {
   "name": "injectassets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Utility to inject reference or inline assets in your HTML",
   "main": "index.js",
   "bin": {
