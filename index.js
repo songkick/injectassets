@@ -87,9 +87,9 @@ function createOutputStream(options) {
   }
 }
 
-var fileDescRegExps = ['root', 'base', 'name', 'ext', 'dir'].map(function(key){
+var fileDescRegExps = Object.keys(path.parse('')).map(function(key){
   return {
-    reg: new RegExp('%' + key + '%', 'g'),
+    reg: new RegExp('{' + key + '}', 'g'),
     key: key
   };
 });
