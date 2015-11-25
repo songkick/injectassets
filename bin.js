@@ -5,6 +5,8 @@ var chokidar = require('chokidar');
 var insertassets = require('./index');
 var path = require('path');
 
+var pkg = require(path.join(__dirname, 'package.json'));
+
 var DEFAULTS = {
     source: null,
     output: null,
@@ -16,6 +18,7 @@ var DEFAULTS = {
 };
 
 commander
+  .version(pkg.version)
   .option('-s, --source <path to template>', 'template file path')
   .option('-o, --output <path>', 'result output path')
   .option('-e, --extensions <comma separated>', 'comma separated list of extensions to inject')
