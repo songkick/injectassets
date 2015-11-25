@@ -1,5 +1,7 @@
 # injectassets
 
+[![Build Status](https://travis-ci.org/ArnaudRinquin/injectassets.svg)](https://travis-ci.org/ArnaudRinquin/injectassets)
+
 CLI tool to inject assets (CSS, JS, ...) file into your HTML file (or other) by either referencing or inlining them.
 
 ## Usage
