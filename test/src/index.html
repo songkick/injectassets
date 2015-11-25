@@ -1,0 +1,26 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inject assets</title>
+    {{#inline_css}}
+    <style>
+{{{.}}}
+    </style>
+    {{/inline_css}}
+    {{#css}}
+    <link href="{{{.}}}" rel="stylesheet" type="text/css">
+    {{/css}}
+    {{#js}}
+    <script src="{{{.}}}"></script>
+    {{/js}}
+</head>
+<body>
+    <h1>injectassets is pretty cool</h1>
+    <p>You should probably try it :)</p>
+    {{#inline_js}}
+    <script>
+{{{.}}}
+    </script>
+    {{/inline_js}}
+</body>
+</html>

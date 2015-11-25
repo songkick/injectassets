@@ -38,18 +38,18 @@ CLI tool to inject assets (CSS, JS, ...) file into your HTML file (or other) by 
   ```bash
   Usage: injectassets [options]
 
-    Options:
+  Options:
 
-      -h, --help                        output usage information
-      -V, --version                     output the version number
-      -s, --source <path to template>   template file path, default: stdin
-      -o, --output <path>               result output path, default: stdout
-      -g, --reference-globs <globs...>  globs for files to be inject as references
-      -G, --inline-globs <globs...>     globs for files to be inlined
-      -d, --dir <assets folder>         injected assets directory, default: "./"
-      -p, --pattern <string>            use this pattern to generate paths, default {base}
-      -w, --watch                       run on every source file change
-      -e, --encoding <string>           read/write encoding, default "utf-8"
+  -h, --help                        output usage information
+  -V, --version                     output the version number
+  -s, --source <path to template>   template file path, default: stdin
+  -o, --output <path>               result output path, default: stdout
+  -g, --reference-globs <globs...>  globs for files to be inject as references
+  -G, --inline-globs <globs...>     globs for files to be inlined
+  -d, --dir <assets folder>         injected assets directory, default: "./"
+  -p, --pattern <string>            use this pattern to generate paths, default {dir}/{base}
+  -w, --watch                       run on every source file change
+  -e, --encoding <string>           read/write encoding, encoding "utf-8"
   ```
 
 ## Examples

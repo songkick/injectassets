@@ -12,7 +12,7 @@ var DEFAULTS = {
     output: null,
     dir: './',
     watch: false,
-    pattern: '{base}',
+    pattern: '{dir}/{base}',
     encoding: 'utf-8',
     referenceGlobs: null,
     inlineGlobs: null,
@@ -29,7 +29,7 @@ commander
   .option('-g, --reference-globs <globs...>', 'globs for files to be inject as references', splitGlobs)
   .option('-G, --inline-globs <globs...>', 'globs for files to be inlined', splitGlobs)
   .option('-d, --dir <assets folder>', 'injected assets directory, default: "./"')
-  .option('-p, --pattern <string>', 'use this pattern to generate paths, default {base}')
+  .option('-p, --pattern <string>', 'use this pattern to generate paths, default {dir}/{base}')
   .option('-w, --watch', 'run on every source file change')
   .option('-e, --encoding <string>', 'read/write encoding, encoding "utf-8"')
 

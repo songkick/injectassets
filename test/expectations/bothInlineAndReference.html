@@ -1,0 +1,34 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Inject assets</title>
+    <style>
+.inlined {
+  background: blue;
+}
+
+    </style>
+    <style>
+.inlined {
+  color: pink;
+}
+
+    </style>
+    <link href="test/dist/styles/referenced-0.css" rel="stylesheet" type="text/css">
+    <link href="test/dist/styles/referenced-1.css" rel="stylesheet" type="text/css">
+    <script src="test/dist/scripts/referenced-0.js"></script>
+    <script src="test/dist/scripts/referenced-1.js"></script>
+</head>
+<body>
+    <h1>injectassets is pretty cool</h1>
+    <p>You should probably try it :)</p>
+    <script>
+console.log('this script should be inlined', 0);
+
+    </script>
+    <script>
+console.log('this script should be inlined', 1);
+
+    </script>
+</body>
+</html>

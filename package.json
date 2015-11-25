@@ -6,7 +6,9 @@
   "bin": {
     "injectassets": "bin.js"
   },
-  "scripts": {},
+  "scripts": {
+    "test": "tap test.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ArnaudRinquin/injectassets.git"
@@ -29,5 +31,9 @@
     "glob": "^6.0.1",
     "mustache": "^2.2.0",
     "node.extend": "^1.1.5"
+  },
+  "devDependencies": {
+    "rimraf": "^2.4.4",
+    "tap": "^2.3.1"
   }
 }
