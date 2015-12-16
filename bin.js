@@ -31,7 +31,7 @@ commander
   .option('-d, --dir <assets folder>', 'injected assets directory, default: "./"')
   .option('-p, --pattern <string>', 'use this pattern to generate paths, default {dir}/{base}')
   .option('-w, --watch', 'run on every source file change')
-  .option('-e, --encoding <string>', 'read/write encoding, encoding "utf-8"')
+  .option('-e, --encoding <string>', 'read/write encoding, encoding "utf-8"');
 
 commander.parse(process.argv);
 
@@ -43,11 +43,6 @@ var options = Object.keys(DEFAULTS).reduce(function(options, key){
 var run = insertassets.bind(null, options);
 
 if (options.watch) {
-
-  function prefixGlobWithDir(glob){
-    return path.join(options.dir, glob);
-  };
-
   var watchedGlobs = []
     .concat(options.referenceGlobs)
     .concat(options.inlineGlobs)
@@ -59,3 +54,7 @@ if (options.watch) {
 }
 
 run();
+
+function prefixGlobWithDir(glob){
+  return path.join(options.dir, glob);
+}
