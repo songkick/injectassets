@@ -8,6 +8,10 @@ function cleanDist() {
   rimraf.sync(path.join(__dirname, 'test/dist/*.html'));
 }
 
+function copyFile(srcPath, destPath){
+  return fs.writeFileSync(path.join(__dirname, destPath), getContent(srcPath));
+}
+
 function getContent(filePath) {
   return fs.readFileSync(path.join(__dirname, filePath)).toString();
 }
@@ -20,12 +24,12 @@ var expectations = [
   'specifyDir',
   'withPattern',
 ].reduce(function(expectations, file){
-    expectations[file] = getContent('test/expectations/' + file + '.html')
+    expectations[file] = getContent('test/expectations/' + file + '.html');
     return expectations;
   }, {});
 
 tap.test('CLI', function(test){
-  test.plan(7);
+  test.plan(8);
 
   test.test('No options', function(test){
     test.plan(2);
@@ -108,6 +112,23 @@ tap.test('CLI', function(test){
     ], function(error, stdout, stderr){
       test.equal('', stderr);
       test.equal(expectations.withPattern, stdout);
+    });
+  });
+
+  test.test('-s same as -o', function(test){
+    test.plan(3);
+    cleanDist();
+    copyFile('test/src/index.html','test/dist/index.html');
+    child_process.execFile('./bin.js', [
+      '-s', 'test/dist/index.html',
+      '-o', 'test/dist/index.html'
+    ], function(error, stdout, stderr){
+      test.equal('', stderr);
+      test.equal('', stdout);
+
+      var output = getContent('test/dist/index.html');
+      cleanDist();
+      test.equal(output, expectations.noGlob);
     });
   });
 });

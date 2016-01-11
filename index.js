@@ -61,7 +61,7 @@ function listSingleGlob(globString) {
 function prefixPathWith(dir) {
   return function(glob) {
     return path.join(dir, glob);
-  }
+  };
 }
 
 function listFiles(globs, fromDir) {
@@ -72,7 +72,7 @@ function listFiles(globs, fromDir) {
       return results.reduce(function(allPaths, paths){
         return allPaths.concat(paths);
       });
-    })
+    });
 }
 
 function sortByExtensions(paths) {
@@ -108,7 +108,7 @@ function formatToPath(options) {
       var value = fileDesc[key];
       return path.replace(reg, value);
     }, options.pattern);
-  }
+  };
 }
 
 function formatPaths(options) {
@@ -141,7 +141,7 @@ function getInlinedFilesContents(options) {
 
   return listFiles(options.inlineGlobs, options.dir)
     .then(function(paths){
-      return Promise.all(paths.map(getFileContent.bind(null, options)))
+      return Promise.all(paths.map(getFileContent.bind(null, options)));
     })
     .then(function(pathsAndContents){
       return pathsAndContents.reduce(function(contentsByExtension, pathAndContent){
@@ -171,7 +171,7 @@ function getReferencesPaths(options) {
   return listFiles(options.referenceGlobs, options.dir)
     .then(fromDirectory(options.dir))
     .then(sortByExtensions)
-    .then(formatPaths(options))
+    .then(formatPaths(options));
 }
 
 function render(options) {
@@ -197,17 +197,29 @@ function writeToStream(writeStream, content) {
 }
 
 module.exports = function inseertassets(options) {
-  return Promise.all([
-    render(options),
-    createOutputStream(options)
-  ])
-  .then(function(results) {
-    var rendered = results[0];
-    var writeStream = results[1];
-    return writeToStream(writeStream, rendered);
-  }).catch(function(err) {
-    console.error(err.stack);
-    process.exit(1);
-  });
+  var promise;
+  if(options.source && options.source === options.output){
+    promise = render(options)
+      .then(function(source){
+        return createOutputStream(options).then(function(output){
+          return [source, output];
+        });
+      });
+  }else{
+    promise = Promise.all([
+      render(options),
+      createOutputStream(options)
+    ]);
+  }
+  return promise
+    .then(function(results) {
+      var rendered = results[0];
+      var writeStream = results[1];
+      return writeToStream(writeStream, rendered);
+    })
+    .catch(function(err) {
+      console.error(err.stack);
+      process.exit(1);
+    });
 
-}
+};
