@@ -1,5 +1,5 @@
 {
-  "name": "injectassets",
+  "name": "@songkick/injectassets",
   "version": "1.0.2",
   "description": "Utility to inject reference or inline assets in your HTML",
   "main": "index.js",
@@ -35,5 +35,8 @@
   "devDependencies": {
     "rimraf": "^2.4.4",
     "tap": "^2.3.1"
+  },
+  "directories": {
+    "test": "test"
   }
 }
