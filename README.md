@@ -1,4 +1,4 @@
-# injectassets [![Build Status](https://travis-ci.org/ArnaudRinquin/injectassets.svg)](https://travis-ci.org/ArnaudRinquin/injectassets)
+# injectassets [![Build Status](https://travis-ci.org/songkick/injectassets.svg)](https://travis-ci.org/songkick/injectassets)
 
 Utility to inject reference or inline assets in your HTML
 

@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArnaudRinquin/injectassets.git"
+    "url": "git+https://github.com/songkick/injectassets.git"
   },
   "keywords": [
     "assets",
@@ -22,9 +22,9 @@
   "author": "Arnaud Rinquin",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ArnaudRinquin/injectassets/issues"
+    "url": "https://github.com/songkick/injectassets/issues"
   },
-  "homepage": "https://github.com/ArnaudRinquin/injectassets#readme",
+  "homepage": "https://github.com/songkick/injectassets#readme",
   "dependencies": {
     "chokidar": "^1.2.0",
     "commander": "^2.9.0",
