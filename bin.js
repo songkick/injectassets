@@ -46,6 +46,7 @@ if (options.watch) {
   var watchedGlobs = []
     .concat(options.referenceGlobs)
     .concat(options.inlineGlobs)
+    .filter(function identity(x) { return x;})
     .map(prefixGlobWithDir);
 
   chokidar.watch(watchedGlobs, {
