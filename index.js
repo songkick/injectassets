@@ -4,6 +4,11 @@ var glob = require('glob');
 var path = require('path');
 var extend = require('node.extend');
 
+// The only state in this app. As STDIN is a read-once
+// stream, we must cache it in order to be able to
+// re-run the command many times (use case: watch flag)
+var stdinCache = null;
+
 function readStream(stream) {
   return new Promise(function(resolve, reject){
     var content = '';
@@ -25,6 +30,10 @@ function readStream(stream) {
 function readTemplate(options) {
   var stream;
 
+  if (stdinCache) {
+    return Promise.resolve(stdinCache);
+  }
+
   if (options.source) {
     stream = fs.createReadStream(options.source, {
       autoclose: true,
@@ -35,7 +44,12 @@ function readTemplate(options) {
     stream = process.stdin;
   }
 
-  return readStream(stream);
+  return readStream(stream).then(function(template){
+    if (!options.source) { // only save it in stdin mode
+      stdinCache = template;
+    }
+    return template;
+  });
 }
 
 function pushInExtensionArray(container, fileDescription) {
