@@ -29,7 +29,7 @@ var expectations = [
   }, {});
 
 tap.test('CLI', function(test){
-  test.plan(8);
+  test.plan(9);
 
   test.test('No options', function(test){
     test.plan(2);
@@ -129,6 +129,17 @@ tap.test('CLI', function(test){
       var output = getContent('test/dist/index.html');
       cleanDist();
       test.equal(output, expectations.noGlob);
+    });
+  });
+
+  test.test('-t, --tags', function(test){
+    test.plan(2);
+    child_process.execFile('./bin.js', [
+      '-t', '[[,]]',
+      '-s', 'test/src/index-other-tags.html'
+    ], function(error, stdout, stderr){
+      test.equal('', stderr);
+      test.equal(expectations.noGlob, stdout);
     });
   });
 });

@@ -189,6 +189,9 @@ function getReferencesPaths(options) {
 }
 
 function render(options) {
+
+  mustache.tags = options.tags.split(',');
+
   return Promise.all([
     // Read the template
     readTemplate(options),
