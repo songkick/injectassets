@@ -57,6 +57,7 @@ Utility to inject reference or inline assets in your HTML
     -G, --inline-globs <globs...>     globs for files to be inlined
     -d, --dir <assets folder>         injected assets directory, default: "./"
     -p, --pattern <string>            use this pattern to generate paths, default {dir}/{base}
+    -t, --tags <string>               specify open/close tags. default: "{{,}}"
     -w, --watch                       run on every source file change
     -e, --encoding <string>           read/write encoding, encoding "utf-8"
     ```
@@ -118,4 +119,9 @@ Utility to inject reference or inline assets in your HTML
 
     ```bash
     cat src/index.html | injectassets -G 'scripts/*.js;styles/*.css' -w -o dist/index.html
+    ```
+
+  * Use square brackets instead of curly brackets for template:
+    ```bash
+    cat src/index.html | injectassets -t '[[,]]' -g '*.{css,js}'
     ```
