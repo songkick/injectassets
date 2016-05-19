@@ -1,6 +1,6 @@
 {
   "name": "@songkick/injectassets",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Utility to inject reference or inline assets in your HTML",
   "main": "index.js",
   "bin": {
